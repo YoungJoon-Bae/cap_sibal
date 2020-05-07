@@ -29,9 +29,6 @@ public class Kio_Project extends JFrame {
 	public Kio_Project() {
 		homeframe();
 	}
-	/**
-	 * Launch the application.
-	 */
 	
 	public void homeframe() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
