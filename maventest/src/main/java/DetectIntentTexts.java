@@ -104,7 +104,7 @@ public class DetectIntentTexts {
             break;
         }
       }
-
+ 
     } catch (Exception e) {
       System.out.println("Usage:");
       System.out.println("mvn exec:java -DDetectIntentTexts "
