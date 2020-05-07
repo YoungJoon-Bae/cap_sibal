@@ -15,7 +15,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
-			<attribute name="module" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -30,6 +29,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/kwon3/OneDrive/바탕 화면/commons-cli-1.4/commons-cli-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/server/Desktop/commons-cli-1.4/commons-cli-1.4.jar"/>
+	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="output" path="target/asdf-0.1.0-SNAPSHOT/WEB-INF/classes"/>
 </classpath>

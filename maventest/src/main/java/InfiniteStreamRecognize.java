@@ -145,20 +145,20 @@ public class InfiniteStreamRecognize {
               SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
               if (result.getIsFinal()) {
             	  System.out.println(alternative.getTranscript());
-                //System.out.print(GREEN);
-                //System.out.print("\033[2K\r");
-                //System.out.printf(
-                //    "%s: %s [confidence: %.2f]\n",
-                //    convertMillisToDate(correctedTime),
-                //    alternative.getTranscript(),
-                //    alternative.getConfidence());
+                System.out.print(GREEN);
+                System.out.print("\033[2K\r");
+                System.out.printf(
+                   "%s: %s [confidence: %.2f]\n",
+                    convertMillisToDate(correctedTime),
+                   alternative.getTranscript(),
+                    alternative.getConfidence());
                 isFinalEndTime = resultEndTimeInMS;
                 lastTranscriptWasFinal = true;
               } else {
-                //System.out.print(RED);
-                //System.out.print("\033[2K\r");
-                //System.out.printf(
-                //    "%s: %s", convertMillisToDate(correctedTime), alternative.getTranscript());
+                System.out.print(RED);
+                System.out.print("\033[2K\r");
+                System.out.printf(
+                   "%s: %s", convertMillisToDate(correctedTime), alternative.getTranscript());
                 lastTranscriptWasFinal = false;
               }
             }
@@ -253,7 +253,7 @@ public class InfiniteStreamRecognize {
             if ((newStream) && (lastAudioInput.size() > 0)) {
               // if this is the first audio from a new request
               // calculate amount of unfinalized audio from last request
-              // resend the audio to the speech client before incoming audio
+              // resend the audio to the speech client before																																								 incoming audio
               double chunkTime = STREAMING_LIMIT / lastAudioInput.size();
               // ms length of each chunk in previous request audio arrayList
               if (chunkTime != 0) {
