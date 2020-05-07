@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.border.EmptyBorder;
-
 import com.google.appengine.api.images.Image;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
@@ -24,7 +23,7 @@ import java.awt.Scrollbar;
 public class Kio_Project extends JFrame {
 
 	private JPanel contentPane = new JPanel();
-	private java.awt.Image background = new ImageIcon(Kio_Project.class.getResource("../image/FirstPage.PNG")).getImage();
+	private java.awt.Image background = new ImageIcon(Kio_Project.class.getResource("../image/FirstPage2.png")).getImage();
 	private JButton Button1 = new JButton("주문하러가기");
 	
 	public Kio_Project() {
@@ -36,14 +35,12 @@ public class Kio_Project extends JFrame {
 	
 	public void homeframe() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1824, 2736);
+		setBounds(100, 100, 608, 912);
 		setTitle("KioProject");
 		setResizable(false);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JScrollBar scrollbar = new JScrollBar();
-		getContentPane().add(scrollbar, BorderLayout.EAST);
 		
 	//	FlowLayout layout = new FlowLayout(FlowLayout.CENTER,400,400);
 	//	getContentPane().setLayout(layout);

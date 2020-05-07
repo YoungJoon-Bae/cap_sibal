@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
     name = "HelloAppEngine",
-    urlPatterns = {"/hello"}
+    urlPatterns = {"/이씨발아"}
 )
 public class HelloAppEngine extends HttpServlet {
 

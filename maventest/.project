@@ -45,5 +45,10 @@
 			<type>1</type>
 			<location>C:/Users/server/Desktop/FirstPage.PNG</location>
 		</link>
+		<link>
+			<name>src/main/java/image/FirstPage2.png</name>
+			<type>1</type>
+			<location>C:/Users/server/Desktop/FirstPage2.png</location>
+		</link>
 	</linkedResources>
 </projectDescription>
