@@ -9,7 +9,7 @@ import javax.swing.JButton;
 
 public class Kio_Project extends JFrame {
 
-	private JPanel contentPane = new JPanel();
+	private JPanel contentPanel = new JPanel();
 	private java.awt.Image background = new ImageIcon(Kio_Project.class.getResource("../image/FirstPage2.png")).getImage();
 	private JButton Button1 = new JButton("주문하러가기");
 	
