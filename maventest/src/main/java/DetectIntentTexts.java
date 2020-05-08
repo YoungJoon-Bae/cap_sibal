@@ -27,6 +27,7 @@ import com.google.cloud.dialogflow.v2.TextInput.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 // [END dialogflow_import_libraries]
 
@@ -80,50 +81,29 @@ public class DetectIntentTexts {
 
   // [START run_application]
   public static void main(String[] args) throws Exception {
+	  
     ArrayList<String> texts = new ArrayList<>();
-    String projectId = "";
+    String projectId = "capstoneproject-ycqucq";
     String sessionId = UUID.randomUUID().toString();
-    String languageCode = "ko-KR";
-
-    try {
-      String command = args[0];
-      if (command.equals("--projectId")) {
-        projectId = args[1];
-      }
-
-      for (int i = 2; i < args.length; i++) {
-        switch (args[i]) {
-          case "--sessionId":
-            sessionId = args[++i];
-            break;
-          case "--languageCode":
-            languageCode = args[++i];
-            break;
-          default:
-            texts.add(args[i]);
-            break;
+    String languageCode = "en-US";
+    Scanner scan = new Scanner(System.in);
+    String e = "";
+    
+    while(true) {
+    	
+    	while(!e.equals("end")) {
+        	detectIntentTexts(projectId, texts, sessionId, languageCode);
+        	texts.clear();
+        	System.out.print("다음 문장을 입력하세요:");
+        	e = scan.nextLine();
+        	texts.add(e);
         }
-      }
- 
-    } catch (Exception e) {
-      System.out.println("Usage:");
-      System.out.println("mvn exec:java -DDetectIntentTexts "
-          + "-Dexec.args=\"--projectId PROJECT_ID --sessionId SESSION_ID "
-          + "'hello' 'book a meeting room' 'Mountain View' 'tomorrow' '10 am' '2 hours' " 
-          + "'10 people' 'A' 'yes'\"\n");
-
-      System.out.println("Commands: text");
-      System.out.println("\t--projectId <projectId> - Project/Agent Id");
-      System.out.println("\tText: \"hello\" \"book a meeting room\" \"Mountain View\" \"tomorrow\" "
-          + "\"10am\" \"2 hours\" \"10 people\" \"A\" \"yes\"");
-      System.out.println("Optional Commands:");
-      System.out.println("\t--languageCode <languageCode> - Language Code of the query (Defaults "
-          + "to \"en-US\".)");
-      System.out.println("\t--sessionId <sessionId> - Identifier of the DetectIntent session "
-          + "(Defaults to a random UUID.)");
-    }
-
-    detectIntentTexts(projectId, texts, sessionId, languageCode);
+    	texts.clear();
+    	System.out.println("주문 완료 다음 손님 입장");
+    	System.out.print("다음 문장을 입력하세요:");
+    	e = scan.nextLine();
+    	texts.add(e);
+    	sessionId = UUID.randomUUID().toString();
+    } 
   }
-  // [END run_application]
 }
