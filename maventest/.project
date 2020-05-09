@@ -41,14 +41,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>src/main/java/image/FirstPage.PNG</name>
+			<name>src/main/java/image/FirstPage.png</name>
 			<type>1</type>
-			<location>C:/Users/server/Desktop/FirstPage.PNG</location>
-		</link>
-		<link>
-			<name>src/main/java/image/FirstPage2.png</name>
-			<type>1</type>
-			<location>C:/Users/server/Desktop/FirstPage2.png</location>
+			<location>C:/Users/server/Desktop/image/FirstPage.png</location>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -146,18 +146,30 @@ public class InfiniteStreamRecognize {
               if (result.getIsFinal()) {
             	  System.out.println(alternative.getTranscript());
                 System.out.print(GREEN);
+
                 System.out.print("\033[2K\r");
                 System.out.printf(
                    "%s: %s [confidence: %.2f]\n",
                     convertMillisToDate(correctedTime),
                    alternative.getTranscript(),
                     alternative.getConfidence());
+
+               System.out.print("\033[2K\r");
+                System.out.printf(
+                 "%s: %s [confidence: %.2f]\n",
+                  convertMillisToDate(correctedTime),
+               alternative.getTranscript(),
+                   alternative.getConfidence());
+
                 isFinalEndTime = resultEndTimeInMS;
                 lastTranscriptWasFinal = true;
               } else {
                 System.out.print(RED);
                 System.out.print("\033[2K\r");
-                System.out.printf(
+
+
+               System.out.printf(
+
                    "%s: %s", convertMillisToDate(correctedTime), alternative.getTranscript());
                 lastTranscriptWasFinal = false;
               }
