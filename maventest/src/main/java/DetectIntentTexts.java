@@ -29,6 +29,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+
+import com.google.api.gax.longrunning.OperationFuture;
+import com.google.api.gax.rpc.ApiStreamObserver;
+import com.google.api.gax.rpc.BidiStreamingCallable;
+import com.google.api.gax.rpc.ClientStream;
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StreamController;
+import com.google.cloud.speech.v1.LongRunningRecognizeMetadata;
+import com.google.cloud.speech.v1.LongRunningRecognizeResponse;
+import com.google.cloud.speech.v1.RecognitionAudio;
+import com.google.cloud.speech.v1.RecognitionConfig;
+import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
+import com.google.cloud.speech.v1.RecognizeResponse;
+import com.google.cloud.speech.v1.SpeechClient;
+import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
+import com.google.cloud.speech.v1.SpeechRecognitionResult;
+import com.google.cloud.speech.v1.StreamingRecognitionConfig;
+import com.google.cloud.speech.v1.StreamingRecognitionResult;
+import com.google.cloud.speech.v1.StreamingRecognizeRequest;
+import com.google.cloud.speech.v1.StreamingRecognizeResponse;
+import com.google.cloud.speech.v1.WordInfo;
+import com.google.common.util.concurrent.SettableFuture;
+import com.google.protobuf.ByteString;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.DataLine.Info;
+import javax.sound.sampled.TargetDataLine;
 // [END dialogflow_import_libraries]
 
 
@@ -36,7 +71,7 @@ import java.util.UUID;
  * DialogFlow API Detect Intent sample with text inputs.
  */
 public class DetectIntentTexts {
-
+	  public static String answer = null;
   // [START dialogflow_detect_intent_text]
   /**
    * Returns the result of detect intent with texts as inputs.
@@ -77,33 +112,131 @@ public class DetectIntentTexts {
       }
     }
   }
+ 
   // [END dialogflow_detect_intent_text]
+  public static String streamingMicRecognize() throws Exception {
+	 
+	  ResponseObserver<StreamingRecognizeResponse> responseObserver = null;
+	    try (SpeechClient client = SpeechClient.create()) {
+	    	
+	      responseObserver =
+	          new ResponseObserver<StreamingRecognizeResponse>() {
+	            ArrayList<StreamingRecognizeResponse> responses = new ArrayList<>();
 
+	            public void onStart(StreamController controller) {}
+
+	            public void onResponse(StreamingRecognizeResponse response) {
+	              responses.add(response);
+	            }
+
+	            public void onComplete() {
+	              for (StreamingRecognizeResponse response : responses) {
+	                StreamingRecognitionResult result = response.getResultsList().get(0);
+	                SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+	                System.out.printf("Transcript : %s\n", alternative.getTranscript());
+	                 answer = alternative.getTranscript();
+	              }
+	            }
+
+	            public void onError(Throwable t) {
+	              System.out.println(t);
+	            }
+	          };
+
+	      ClientStream<StreamingRecognizeRequest> clientStream =
+	          client.streamingRecognizeCallable().splitCall(responseObserver);
+
+	      RecognitionConfig recognitionConfig =
+	          RecognitionConfig.newBuilder()
+	              .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
+	              .setLanguageCode("ko-KR")
+	              .setSampleRateHertz(16000)
+	              .build();
+	      StreamingRecognitionConfig streamingRecognitionConfig =
+	          StreamingRecognitionConfig.newBuilder().setConfig(recognitionConfig).build();
+
+	      StreamingRecognizeRequest request =
+	          StreamingRecognizeRequest.newBuilder()
+	              .setStreamingConfig(streamingRecognitionConfig)
+	              .build(); // The first request in a streaming call has to be a config
+
+	      clientStream.send(request);
+	      // SampleRate:16000Hz, SampleSizeInBits: 16, Number of channels: 1, Signed: true,
+	      // bigEndian: false
+	      AudioFormat audioFormat = new AudioFormat(16000, 16, 1, true, false);
+	      DataLine.Info targetInfo =
+	          new Info(
+	              TargetDataLine.class,
+	              audioFormat); // Set the system information to read from the microphone audio stream
+
+	      if (!AudioSystem.isLineSupported(targetInfo)) {
+	        System.out.println("Microphone not supported");
+	        System.exit(0);
+	      }
+	      // Target data line captures the audio stream the microphone produces.
+	      TargetDataLine targetDataLine = (TargetDataLine) AudioSystem.getLine(targetInfo);
+	      targetDataLine.open(audioFormat);
+	      targetDataLine.start();
+	      System.out.println("Start speaking");
+	      long startTime = System.currentTimeMillis();
+	      // Audio Input Stream
+	      AudioInputStream audio = new AudioInputStream(targetDataLine);
+	      while (true) {
+	        long estimatedTime = System.currentTimeMillis() - startTime;
+	        byte[] data = new byte[6400];
+	        audio.read(data);
+	        if (estimatedTime > 10000) { // 60 seconds
+	          System.out.println("Stop speaking.");
+	          targetDataLine.stop();
+	          targetDataLine.close();
+	          break;
+	        }
+	        request =
+	            StreamingRecognizeRequest.newBuilder()
+	                .setAudioContent(ByteString.copyFrom(data))
+	                .build();
+	        clientStream.send(request);
+	      }
+	    } catch (Exception e) {
+	      System.out.println(e);
+	    }
+	    responseObserver.onComplete();
+	    return answer;
+		}
   // [START run_application]
+  
+  
+  
   public static void main(String[] args) throws Exception {
 	  
     ArrayList<String> texts = new ArrayList<>();
     String projectId = "capstoneproject-ycqucq";
     String sessionId = UUID.randomUUID().toString();
-    String languageCode = "en-US";
+    String languageCode = "ko-KR";
     Scanner scan = new Scanner(System.in);
     String e = "";
     
-    while(true) {
-    	
-    	while(!e.equals("end")) {
-        	detectIntentTexts(projectId, texts, sessionId, languageCode);
+    try {
+    	while(true) {
+        	while(!e.equals("end")) {
+            	texts.clear();
+            	System.out.print("다음 문장을 입력하세요:");
+            	//e = streamingMicRecognize(); 음성
+            	e = scan.nextLine(); //타이핑
+            	texts.add(e);
+            	detectIntentTexts(projectId, texts, sessionId, languageCode);
+            }
         	texts.clear();
+        	System.out.println("주문 완료 다음 손님 입장");
         	System.out.print("다음 문장을 입력하세요:");
         	e = scan.nextLine();
         	texts.add(e);
-        }
-    	texts.clear();
-    	System.out.println("주문 완료 다음 손님 입장");
-    	System.out.print("다음 문장을 입력하세요:");
-    	e = scan.nextLine();
-    	texts.add(e);
-    	sessionId = UUID.randomUUID().toString();
-    } 
+        	sessionId = UUID.randomUUID().toString();
+        } 
+    }
+    catch(Exception e1){
+    	System.out.println(e1);
+    }
+    
   }
 }
